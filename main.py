@@ -1,3 +1,4 @@
+from functools import partialmethod
 import time
 from selenium import webdriver
 import requests
@@ -8,12 +9,12 @@ import stdiomask
 
 clear = lambda:os.system("cls")
 
-# You can download the chrome driver from https://chromedriver.chromium.org/
-# Example: "D:\Programming\chromedriver.exe"
+# Your chromedriver's path goes here 
 SPATH = ""
 
 clear()
 
+# GITHUB USERNAME AND PASSWORD
 username = ""
 password = ""
 
@@ -37,6 +38,7 @@ try:
     driver = webdriver.Chrome(SPATH)
 except:
     sys.exit(f"{colors.red}Chromedriver was not found. Please download it from https://chromedriver.chromium.org/ and change the path to the driver in the code.{colors.reset}")
+
 print("\nAccessing page...")
 driver.get("https://stripcode.dev/ranked")
 print("\nLogging in with GitHub...")
@@ -72,13 +74,36 @@ print(f"{colors.green}Succesfully logged in!{colors.reset}")
 while True:
     print("")
     time.sleep(1.5)
-    button1 = driver.find_element_by_xpath(b1xpath + "/span[1]").text
-    button2 = driver.find_element_by_xpath(b2xpath + "/span[1]").text
-    button3 = driver.find_element_by_xpath(b3xpath + "/span[1]").text
-    button4 = driver.find_element_by_xpath(b4xpath + "/span[1]").text
-    button5 = driver.find_element_by_xpath(b5xpath + "/span[1]").text
-    title = driver.find_element_by_xpath(titlexpath).text
-
+    try:
+        button1 = driver.find_element_by_xpath(b1xpath + "/span[1]").text
+        button2 = driver.find_element_by_xpath(b2xpath + "/span[1]").text
+        button3 = driver.find_element_by_xpath(b3xpath + "/span[1]").text
+        button4 = driver.find_element_by_xpath(b4xpath + "/span[1]").text
+        button5 = driver.find_element_by_xpath(b5xpath + "/span[1]").text
+        title = driver.find_element_by_xpath(titlexpath).text
+    except:
+        print(f"{colors.yellow}An element was not found, retrying in 5 seconds.{colors.reset}")
+        time.sleep(5)
+        try:
+            button1 = driver.find_element_by_xpath(b1xpath + "/span[1]").text
+            button2 = driver.find_element_by_xpath(b2xpath + "/span[1]").text
+            button3 = driver.find_element_by_xpath(b3xpath + "/span[1]").text
+            button4 = driver.find_element_by_xpath(b4xpath + "/span[1]").text
+            button5 = driver.find_element_by_xpath(b5xpath + "/span[1]").text
+            title = driver.find_element_by_xpath(titlexpath).text
+        except:
+            print(f"\n{colors.red}The button was not found, restarting the program in 10 seconds.{colors.reset}")
+            time.sleep(6)
+            print(f"{colors.yellow}3{colors.reset}")
+            time.sleep(1)
+            print(f"{colors.yellow}2{colors.reset}")
+            time.sleep(1)
+            print(f"{colors.yellow}1{colors.reset}")
+            time.sleep(1)
+            print(f"{colors.red}Restarting...{colors.reset}")
+            time.sleep(1)
+            os.execl(sys.executable, sys.executable, *sys.argv)
+        
     def searchinrepo(repo, name: str):
         name.replace(" ", "%20")
         print(f"\n{colors.cyan}Trying to find \"{name}\" in {repo}{colors.reset}")
